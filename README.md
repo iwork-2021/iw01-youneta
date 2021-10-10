@@ -14,4 +14,7 @@ iw01-youneta created by GitHub Classroom
 
 ## 实现细节
 ### MVC设计模式
+MVC即Model-View-Controller，model用于存储字段，view实现UI而不涉及数据操作和业务逻辑的操作，controller顾名思义控制UI和数据的通信以及逻辑的实现。
+在这个项目里，
+
 ### 计算逻辑实现
