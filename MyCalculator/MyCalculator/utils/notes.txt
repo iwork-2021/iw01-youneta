@@ -1,0 +1,3 @@
+1. 计算精度的问题。这是因为浮点数用机器码保存并不是绝对精确导致的。
+2. lastPressButtonType实际上起到的是一种状态机的作用。
+3. 因为无法下载rvm，装不了cocoa pods，原本想用第三方库Masonry来做自动布局。原生的autolayout比较冗长。
