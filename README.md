@@ -7,4 +7,4 @@ iw01-youneta created by GitHub Classroom
 3. 参考[实践视频](https://www.bilibili.com/video/BV1Yr4y1c7HW)，实现`Calculator`类作为模型，仔细体会MVC模式的优点
 4. 用Markdown编写项目文档，并展示运行截屏
 
-![竖屏]https://github.com/iwork-2021/iw01-youneta/blob/main/screenhot/2.png
+![竖屏]https://raw.githubusercontent.com/iwork-2021/iw01-youneta/main/screenhot/2.png
