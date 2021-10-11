@@ -83,7 +83,7 @@
 }
 
 - (void)displayMemoryLabelText:(BOOL)flag {
-    self.memoryLabel.hidden = flag;
+    self.memoryLabel.hidden = !flag;
 }
 
 #pragma mark *** getter ***

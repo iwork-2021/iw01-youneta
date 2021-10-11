@@ -154,6 +154,7 @@
             }
             [weakSelf.headerView updateResultLabelText:weakSelf.model.resultString];
             [weakSelf.headerView updateOperationLabelText:weakSelf.model.operationString];
+            [weakSelf.headerView displayMemoryLabelText:weakSelf.model.memoryFlag];
         };
     }
     return _portraitView;
@@ -171,6 +172,7 @@
             }
             [weakSelf.headerView updateResultLabelText:weakSelf.model.resultString];
             [weakSelf.headerView updateOperationLabelText:weakSelf.model.operationString];
+            [weakSelf.headerView displayMemoryLabelText:weakSelf.model.memoryFlag];
         };
     }
     return _landscapeView;
@@ -180,6 +182,7 @@
     if(!_headerView) {
         _headerView = [[headerView alloc]init];
         _headerView.backgroundColor = [UIColor blackColor];
+        [_headerView displayMemoryLabelText:NO];
     }
     return _headerView;
 }

@@ -24,9 +24,10 @@
 #pragma mark *** static ***
 static calculateManager *sharedManager = nil;
 static NSArray *numberString = @[@"0", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9"];
-static NSArray *unaryOperatorString = @[@"+/-", @"%", @"=", @"x^2", @"x^3", @"log10", @"e^x", @"1/x", @"2√x", @"3√x", @"x!", @"ln", @"sin", @"cos", @"tan", @"sinh", @"cosh", @"tanh"];
-static NSArray *binaryOperatorString = @[@"+", @"-", @"÷", @"×", @"x^y", @"y√x"];
+static NSArray *unaryOperatorString = @[@"+/-", @"%", @"=", @"x^2", @"x^3", @"log10", @"e^x", @"1/x", @"2√x", @"3√x", @"x!", @"ln", @"sin", @"cos", @"tan", @"sinh", @"cosh", @"tanh", @"10^x"];
+static NSArray *binaryOperatorString = @[@"+", @"-", @"÷", @"×", @"x^y", @"y√x", @"EE"];
 static NSArray *memoryOperationString = @[@"m+", @"m-", @"mc"];
+static NSArray *singleNumberString = @[@"mr", @"e", @"π", @"Rand"];
 static NSString *divideZeroErrorString = @"除0错误！";
 static NSString *calculateNotSupportedString = @"暂不支持的操作";
 static NSString *calculateError = @"无效运算";
@@ -74,7 +75,7 @@ static NSString *calculateError = @"无效运算";
                                    @[@"0", @".", @"="],
                                   nil];
     self.landscapeOperationArray = [NSArray arrayWithObjects:
-                                    @[@"(", @")", @"mc", @"m+", @"m-", @"mr", @"AC", @"+/-", @"%", @"÷", @"2^(nd)", @"x^2", @"x^3", @"x^y", @"e^x", @"10^x", @"7", @"8", @"9", @"×", @"1/x", @"2√x", @"3√x", @"y√x", @"ln", @"log10", @"4", @"5", @"6", @"-", @"x!", @"sin", @"cos", @"tan", @"e", @"EE", @"1", @"2", @"3", @"+"],
+                                    @[@"(", @")", @"mc", @"m+", @"m-", @"mr", @"AC", @"+/-", @"%", @"÷", @"2nd", @"x^2", @"x^3", @"x^y", @"e^x", @"10^x", @"7", @"8", @"9", @"×", @"1/x", @"2√x", @"3√x", @"y√x", @"ln", @"log10", @"4", @"5", @"6", @"-", @"x!", @"sin", @"cos", @"tan", @"e", @"EE", @"1", @"2", @"3", @"+"],
                                     @[@"Rad", @"sinh", @"cosh", @"tanh", @"π", @"Rand", @"0", @".", @"="],
                                    nil];
 }
@@ -85,10 +86,10 @@ static NSString *calculateError = @"无效运算";
     if([numberString containsObject:operation]) {
         // 数字键
         switch (model.lastPressButtonType) {
+            case calculatorButtonTypeMemoryOperation:
             case calculatorButtonTypeClear:
             case calculatorButtonTypeDefault:
-                model.resultString = operation;
-                break;
+            case calculatorButtonTypeSingleNumber:
             case calculatorButtonTypeBinaryOperation:
                 model.resultString = operation;
                 break;
@@ -114,9 +115,11 @@ static NSString *calculateError = @"无效运算";
         // 二元运算符
         switch (model.lastPressButtonType) {
             case calculatorButtonTypeBinaryOperation: break;
+            case calculatorButtonTypeMemoryOperation:
             case calculatorButtonTypePoint:
             case calculatorButtonTypeDefault:
             case calculatorButtonTypeUnaryOperation:
+            case calculatorButtonTypeSingleNumber:
             case calculatorButtonTypeNumber:
                 if([model.operationString  isEqualToString:@""]){
                     model.ans = model.resultString;
@@ -146,9 +149,11 @@ static NSString *calculateError = @"无效运算";
                 model.operationString = @"";
                 break;
             }
+            case calculatorButtonTypeMemoryOperation:
             case calculatorButtonTypeDefault:
             case calculatorButtonTypeClear:
             case calculatorButtonTypeUnaryOperation:
+            case calculatorButtonTypeSingleNumber:
             case calculatorButtonTypeNumber:
             {
                 
@@ -184,6 +189,8 @@ static NSString *calculateError = @"无效运算";
     else if([operation isEqualToString:@"."]) {
         //小数点
         switch (model.lastPressButtonType) {
+            case calculatorButtonTypeMemoryOperation:
+            case calculatorButtonTypeSingleNumber:
             case calculatorButtonTypeBinaryOperation:
                 model.resultString = @"0.";
                 break;
@@ -197,6 +204,46 @@ static NSString *calculateError = @"无效运算";
         }
         model.lastPressButtonType = calculatorButtonTypePoint;
     }
+    else if([singleNumberString containsObject:operation]) {
+        // 展示单个数字(e, pi, mr)
+        switch (model.lastPressButtonType) {
+            case calculatorButtonTypeUnaryOperation:
+                [model setupModel];
+            case calculatorButtonTypeMemoryOperation:
+            case calculatorButtonTypeNumber:
+            case calculatorButtonTypeBinaryOperation:
+            case calculatorButtonTypePoint:
+            case calculatorButtonTypeClear:
+            case calculatorButtonTypeDefault:
+            case calculatorButtonTypeSingleNumber:
+                model.resultString = [self _calculateAns:model.memoryString Operand:nil Operation:operation];
+                break;
+            default:
+                break;
+        }
+        model.lastPressButtonType = calculatorButtonTypeSingleNumber;
+    }
+    else if([memoryOperationString containsObject:operation]) {
+        //缓存操作
+        switch (model.lastPressButtonType) {
+            case calculatorButtonTypeDefault:
+            case calculatorButtonTypeNumber:
+            case calculatorButtonTypeBinaryOperation:
+            case calculatorButtonTypeUnaryOperation:
+            case calculatorButtonTypePoint:
+            case calculatorButtonTypeClear:
+            case calculatorButtonTypeMemoryOperation:
+            case calculatorButtonTypeSingleNumber:
+                [self _handleMemoryOperation:operation model:model];
+                break;
+            default:
+                break;
+        }
+        model.lastPressButtonType = calculatorButtonTypeMemoryOperation;
+    }
+//    else if([operation isEqualToString:@"2nd"]) {
+//        //切换模式
+//    }
     else {
         [model setupModel];
         return [calculateNotSupportedString stringByAppendingFormat:@": %@",operation];;
@@ -255,6 +302,9 @@ static NSString *calculateError = @"无效运算";
         result = ansDouble * ansDouble * ansDouble;
     }
     else if([operation isEqualToString:@"1/x"]) {
+        if(ansDouble == 0) {
+            return divideZeroErrorString;
+        }
         result = 1 / ansDouble;
     }
     else if([operation isEqualToString:@"log10"]) {
@@ -300,10 +350,49 @@ static NSString *calculateError = @"无效运算";
     else if([operation isEqualToString:@"tanh"]) {
         result = tanh(ansDouble);
     }
+    else if([operation isEqualToString:@"e"]) {
+        result = exp(1);
+    }
+    else if([operation isEqualToString:@"e^x"]) {
+        result = exp(ansDouble);
+    }
+    else if([operation isEqualToString:@"π"]) {
+        result = M_PI;
+    }
+    else if([operation isEqualToString:@"10^x"]) {
+        result = pow(10, ansDouble);
+    }
+    else if([operation isEqualToString:@"Rand"]) {
+        result = ((double)arc4random()) / UINT32_MAX;
+    }
+    else if([operation isEqualToString:@"mr"]) {
+        result = ansDouble;
+    }
+    else if([operation isEqualToString:@"EE"]) {
+        result = ansDouble * pow(10.0, operandDouble);
+    }
     else {
         return [calculateNotSupportedString stringByAppendingFormat:@": %@", operation];
     }
     
     return [NSString stringWithFormat:@"%f", result];
+}
+
+- (void)_handleMemoryOperation:(NSString *)operation model:(calculateModel *)model {
+    double mDouble = [model.memoryString doubleValue];
+    double operationDouble = [model.resultString doubleValue];
+    double result = 0;
+    if([operation isEqualToString:@"m+"]) {
+        result = mDouble + operationDouble;
+    }
+    else if([operation isEqualToString:@"m-"]) {
+        result = mDouble - operationDouble;
+    }
+    else if([operation isEqualToString:@"mc"]) {
+        result = 0;
+    }
+    
+    model.memoryFlag = (result != 0);
+    model.memoryString = [NSString stringWithFormat:@"%f", result];
 }
 @end

@@ -13,9 +13,10 @@ typedef NS_ENUM(NSUInteger, calculatorButtonType) {
     calculatorButtonTypeNumber, //数字键
     calculatorButtonTypeBinaryOperation, //二元运算符
     calculatorButtonTypeUnaryOperation, //一元运算符
-    calculatorButtonTypeEqual, //等于号
     calculatorButtonTypeClear, //AC键
     calculatorButtonTypePoint, //小数点
+    calculatorButtonTypeMemoryOperation, //缓存操作
+    calculatorButtonTypeSingleNumber, //pi,e,mr
 };
 
 typedef NS_ENUM(NSUInteger, calculatorStatus) {

@@ -22,6 +22,7 @@
     if(self = [super init]) {
         [self setupModel];
         self.memoryFlag = NO;
+        self.memoryString = @"0";
     }
     return self;
 }
@@ -31,7 +32,6 @@
     self.ans = @"";
     self.operationString = @"";
     self.lastPressButtonType = calculatorButtonTypeDefault;
-    self.memoryString = @"0";
 }
 
 @end
