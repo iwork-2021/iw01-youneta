@@ -22,12 +22,13 @@ MVC即Model-View-Controller，model用于存储字段，view实现UI而不涉及
 在这个项目里，只有一个`viewController`，主要视图由一个计算器显示屏header和因横竖屏切换而改变的按键视图构成。
 #### (view)Controller
 1. 管理UI
-   a. 在设置自动布局时，令`header`的`left`和`right`都设置为与`viewController.view`的对应属性对齐，因此在横竖屏切换、`viewController`的frame发生改变时`header`的frame也会随之变化，以保持整体视图的对齐。
+   * 在设置自动布局时，令`header`的`left`和`right`都设置为与`viewController.view`的对应属性对齐，因此在横竖屏切换、`viewController`的frame发生改变时`header`的frame也会随之变化，以保持整体视图的对齐。
 > //viewController.m - setupUI
 > &emsp; NSLayoutConstraint *headerViewTop = [NSLayoutConstraint constraintWithItem:self.headerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0];  
 > &emsp; NSLayoutConstraint *headerViewHeight = [NSLayoutConstraint constraintWithItem:self.headerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:0.33 constant:0]; //结果显示区的高度占屏幕1/3  
 > &emsp; NSLayoutConstraint *headerViewLeft = [NSLayoutConstraint constraintWithItem:self.headerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];  
 > &emsp; NSLayoutConstraint *headerViewRight = [NSLayoutConstraint constraintWithItem:self.headerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];  
 > &emsp; [self.view addConstraints:@[headerViewTop, headerViewHeight, headerViewLeft, headerViewRight]];  
-   b. 关于按键视图，由于用了两个view来分别展示在横屏和竖屏状态下的按键视图，在横竖屏切换的相关生命周期函数（`- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation`）中，根据当前屏幕方向设置对应的view的hidden属性。
+
+   * 关于按键视图，由于用了两个view来分别展示在横屏和竖屏状态下的按键视图，在横竖屏切换的相关生命周期函数（`- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation`）中，根据当前屏幕方向设置对应的view的hidden属性。
 ### 计算逻辑实现
