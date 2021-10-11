@@ -43,7 +43,13 @@ controller持有model，而view则不涉及与model有关的任何操作。
 view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为接口暴露出去（例如`headerView`中的`updateResultStringLabel:(NSString *)text`方法），由`controller`来控制调用更新UI。
 * portraitView/landscapeView
   对应在竖屏/横屏状态下的按键视图。两个view其实非常相似，都由`collectionView`来布局，区别在于横竖屏的不同，`collectionView`的`cell`的个数、展示label的text等也会不同。
+  这里还定义了一个点击回调的block`buttonDidClickBlock`，在`viewController`中赋值，在按钮点击响应方法(`didSelectItemAtIndexPath`)中调用这个block来回调到vc中做相应的操作。
+```Objective-C
+  @property (nonatomic, strong) void(^buttonDidClickBlock)(NSInteger x, NSInteger y);
+```
   在后续总结的时候发现这两个view过于相似，其实可以优化成一个工厂模式，根据横竖屏来生产`cell`不同的按键视图。
+  
+  
 * headerView
   
 #### (view)Controller
@@ -75,6 +81,53 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
     [self.view addConstraints:@[landscapeViewTop, landscapeViewHeight, landscapeViewLeft, landscapeViewWidth]];
 
 ```  
-(2). 业务逻辑
-(3). model与view之间的通信
+(2). 业务逻辑  
+在横竖屏旋转的生命周期函数中，根据当前屏幕方向来修改可见的视图：
+``` Objective-C
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    self.view.hidden = NO;
+    switch ([[UIApplication sharedApplication]statusBarOrientation]) {
+        case UIInterfaceOrientationPortrait:
+            self.landscapeView.hidden = YES;
+            self.portraitView.hidden = NO;
+            break;
+        case UIInterfaceOrientationPortraitUpsideDown:
+            self.landscapeView.hidden = YES;
+            self.portraitView.hidden = NO;
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            self.landscapeView.hidden = NO;
+            self.portraitView.hidden = YES;
+            break;
+        case UIInterfaceOrientationLandscapeRight:
+            self.landscapeView.hidden = NO;
+            self.portraitView.hidden = YES;
+            break;
+        default:
+            self.landscapeView.hidden = YES;
+            self.portraitView.hidden = YES;
+            break;
+    }
+}
+```
+(3). model与view之间的通信  
+在`portraitView`和`landscapeView`初始化的时候，给block赋值：
+``` Objective-C
+    //回调block赋值
+    __weak typeof(self) weakSelf = self;
+    _landscapeView.buttonDidClickBlock = ^(NSInteger x, NSInteger y) {
+    NSString *result = [[calculateManager sharedInstance] handleLandscapeOperationAtSection:x atRow:y model:weakSelf.model];
+    if(![result isEqualToString:@""]) {
+        [weakSelf _showAlert:result];
+    }
+    [weakSelf.headerView updateResultLabelText:weakSelf.model.resultString];
+    [weakSelf.headerView updateOperationLabelText:weakSelf.model.operationString];
+    [weakSelf.headerView displayMemoryLabelText:weakSelf.model.memoryFlag];
+};
+```
+在block中根据model的改变调用`headerView`的对应更新UI的方法。  
+
+
+
 ### 2. 计算逻辑实现
