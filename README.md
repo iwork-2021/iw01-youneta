@@ -26,6 +26,6 @@ MVC即Model-View-Controller，model用于存储字段，view实现UI而不涉及
 > &emsp; NSLayoutConstraint *headerViewHeight = [NSLayoutConstraint constraintWithItem:self.headerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:0.33 constant:0]; //结果显示区的高度占屏幕1/3  
 > &emsp; NSLayoutConstraint *headerViewLeft = [NSLayoutConstraint constraintWithItem:self.headerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];  
 > &emsp; NSLayoutConstraint *headerViewRight = [NSLayoutConstraint constraintWithItem:self.headerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];  
->  [self.view addConstraints:@[headerViewTop, headerViewHeight, headerViewLeft, headerViewRight]];  
+> &emsp; [self.view addConstraints:@[headerViewTop, headerViewHeight, headerViewLeft, headerViewRight]];  
 
 ### 计算逻辑实现
