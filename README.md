@@ -11,8 +11,9 @@ iw01-youneta created by GitHub Classroom
 ***
 
 ## 实现UI展示
-
+* 竖屏  
 ![竖屏界面](https://raw.githubusercontent.com/iwork-2021/iw01-youneta/main/screenhot/2.png)
+* 横屏  
 ![横屏界面](https://raw.githubusercontent.com/iwork-2021/iw01-youneta/main/screenhot/3.png)
 
 ***
@@ -21,7 +22,7 @@ iw01-youneta created by GitHub Classroom
 MVC即Model-View-Controller，model用于存储字段，view实现UI而不涉及数据操作和业务逻辑的操作，controller顾名思义控制UI和数据的通信以及逻辑的实现。
 在这个项目里，只有一个`viewController`，主要视图由一个计算器显示屏header和因横竖屏切换而改变的按键视图构成。
 #### (view)Controller
-1. 管理UI  
+(1). 管理UI  
    * 在设置自动布局时，令`header`的`left`和`right`都设置为与`viewController.view`的对应属性对齐，因此在横竖屏切换、`viewController`的frame发生改变时`header`的frame也会随之变化，以保持整体视图的对齐。
 ``` Objective-C
 //viewController.m - setupUI  
@@ -32,5 +33,22 @@ MVC即Model-View-Controller，model用于存储字段，view实现UI而不涉及
 &emsp; [self.view addConstraints:@[headerViewTop, headerViewHeight, headerViewLeft, headerViewRight]];  
 ```
    * 关于按键视图，由于用了两个view来分别展示在横屏和竖屏状态下的按键视图，在横竖屏切换的相关生命周期函数（`- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation`）中，根据当前屏幕方向设置对应的view的hidden属性。
+   * 在设置约束前提前计算出横竖屏下横竖屏按键视图的正确宽高，然后在设置约束的时候直接设置好正确的约束。这里其实是偷了个懒，虽然可以更加简便地将`left`、`bottom`、`right`和`viewController.view`的相应属性对齐，`top`与`header`的`bottom`对齐，之所以没有这么设置约束的主要原因在于横竖屏按键视图的内部实现使用了`UICollectionView`来布局，在`collectionView`的`frame`发生改变时，`cell`的`frame`因为使用的`dataSource`的代理获取初始化的`size`而没有使用自动布局，因此`cell`的`frame`没有改变导致布局混乱。若要在旋转改变`collectionView`的`frame`后正确修改`cell`的`size`来使布局回归正确，需要主动重新修改`collectionView`的`contentSize`等属性，相较于一劳永逸地在初始化的时候就将`collectionView`的`frame`写死为正确的宽高值的方法相比更为麻烦。但是显然，这样写死`frame`的做法其实某种意义上是一种hard code。
+``` Objective-C
+&emsp CGFloat realHeight = self.view.frame.size.height > self.view.frame.size.width ? self.view.frame.size.height : self.view.frame.size.width;
+&emsp CGFloat realWidth = self.view.frame.size.height < self.view.frame.size.width ? self.view.frame.size.height : self.view.frame.size.width;
+NSLayoutConstraint *portraitViewTop = [NSLayoutConstraint constraintWithItem:self.portraitView   attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.headerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+&emsp NSLayoutConstraint *portraitViewHeight = [NSLayoutConstraint constraintWithItem:self.portraitView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(realHeight * 0.67)];
+&emsp NSLayoutConstraint *portraitViewLeft = [NSLayoutConstraint constraintWithItem:self.portraitView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+&emsp NSLayoutConstraint *portraitViewWidth = [NSLayoutConstraint constraintWithItem:self.portraitView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:realWidth];
+&emsp [self.view addConstraints:@[portraitViewTop, portraitViewHeight, portraitViewLeft, portraitViewWidth]];  
+    
+&emsp NSLayoutConstraint *landscapeViewTop = [NSLayoutConstraint constraintWithItem:self.landscapeView   attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.headerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+&emsp NSLayoutConstraint *landscapeViewHeight = [NSLayoutConstraint constraintWithItem:self.landscapeView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:realWidth * 0.67];
+&emsp NSLayoutConstraint *landscapeViewLeft = [NSLayoutConstraint constraintWithItem:self.landscapeView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+&emsp NSLayoutConstraint *landscapeViewWidth = [NSLayoutConstraint constraintWithItem:self.landscapeView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:realHeight];
+&emsp [self.view addConstraints:@[landscapeViewTop, landscapeViewHeight, landscapeViewLeft, landscapeViewWidth]];
+
+```
    
 ### 2. 计算逻辑实现
