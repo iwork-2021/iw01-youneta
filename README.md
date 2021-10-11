@@ -66,13 +66,13 @@ NSLayoutConstraint *portraitViewTop = [NSLayoutConstraint constraintWithItem:sel
     NSLayoutConstraint *portraitViewHeight = [NSLayoutConstraint constraintWithItem:self.portraitView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(realHeight * 0.67)];
     NSLayoutConstraint *portraitViewLeft = [NSLayoutConstraint constraintWithItem:self.portraitView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
     NSLayoutConstraint *portraitViewWidth = [NSLayoutConstraint constraintWithItem:self.portraitView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:realWidth];
-&emsp [self.view addConstraints:@[portraitViewTop, portraitViewHeight, portraitViewLeft, portraitViewWidth]];  
+    [self.view addConstraints:@[portraitViewTop, portraitViewHeight, portraitViewLeft, portraitViewWidth]];  
     
     NSLayoutConstraint *landscapeViewTop = [NSLayoutConstraint constraintWithItem:self.landscapeView   attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.headerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
     NSLayoutConstraint *landscapeViewHeight = [NSLayoutConstraint constraintWithItem:self.landscapeView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:realWidth * 0.67];
     NSLayoutConstraint *landscapeViewLeft = [NSLayoutConstraint constraintWithItem:self.landscapeView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
     NSLayoutConstraint *landscapeViewWidth = [NSLayoutConstraint constraintWithItem:self.landscapeView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:realHeight];
-&emsp [self.view addConstraints:@[landscapeViewTop, landscapeViewHeight, landscapeViewLeft, landscapeViewWidth]];
+    [self.view addConstraints:@[landscapeViewTop, landscapeViewHeight, landscapeViewLeft, landscapeViewWidth]];
 
 ```  
 (2). 业务逻辑
