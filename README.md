@@ -39,7 +39,7 @@ controller持有model，而view则不涉及与model有关的任何操作。
 @end
 ```
 
-### View
+#### View
 view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为接口暴露出去（例如`headerView`中的`updateResultStringLabel:(NSString *)text`方法），由`controller`来控制调用更新UI。
 * portraitView/landscapeView
   对应在竖屏/横屏状态下的按键视图。两个view其实非常相似，都由`collectionView`来布局，区别在于横竖屏的不同，`collectionView`的`cell`的个数、展示label的text等也会不同。
