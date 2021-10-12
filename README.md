@@ -161,12 +161,11 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
 ### 2. 计算逻辑实现
 这一块主要是放在工具类`calculateManager`中实现。  
 这里将其设置为一个单例模式，开放接口`sharedManager`来供调用。
-| currentOperation\lastOperation | Number(0~9) | SingleNumber(pi,e,mr) | BinaryOperator | UnaryOperator |  MemoryOperation | Default |
+| currentOperation(op) \  lastOperation(last_op) | Number(0~9) | SingleNumber(pi,e,mr) | BinaryOperator | UnaryOperator | Default |
 | --- | --- | --- | --- | --- | --- | --- |
-| Numebr(0~9) | 1. if(res=0): res = op; 2. else: res.append(op) | res = op; |
+| Numebr(0~9) | 1. if(res=0): res = op;  2. else: res.append(op) | res = op; | ans = res; res = op; | model.reset();  res=op; | res = op; |
 | SingleNumber(pi,e,mr) |
 | BinaryOperator |
 | UnaryOperator |
-| MemoryOperation |
 | Default |
 
