@@ -51,7 +51,35 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
   
   
 * headerView
-  
+  这个视图是计算器的上方结果显示视图，由几个`label`（显示结果、"M"标志、计算符号显示等）构成，内部的布局约束：
+``` Objective-C
+// headerView.m 
+  - (void)setupUI {
+    //自动布局设置
+    self.resultLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutConstraint *resultLabelTop = [NSLayoutConstraint constraintWithItem:self.resultLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    NSLayoutConstraint *resultLabelBottom = [NSLayoutConstraint constraintWithItem:self.resultLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    NSLayoutConstraint *resultLabelLeft = [NSLayoutConstraint constraintWithItem:self.resultLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+    NSLayoutConstraint *resultLabelRight = [NSLayoutConstraint constraintWithItem:self.resultLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1 constant:-50];
+    
+    [self addConstraints:@[resultLabelTop, resultLabelLeft, resultLabelRight, resultLabelBottom]];
+
+    self.memoryLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutConstraint *memoryLabelTop = [NSLayoutConstraint constraintWithItem:self.memoryLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    NSLayoutConstraint *memoryLabelHeight = [NSLayoutConstraint constraintWithItem:self.memoryLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:0.5 constant:0];
+    NSLayoutConstraint *memoryLabelLeft = [NSLayoutConstraint constraintWithItem:self.memoryLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.resultLabel attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    NSLayoutConstraint *memoryLabelRight = [NSLayoutConstraint constraintWithItem:self.memoryLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    [self addConstraints:@[memoryLabelTop, memoryLabelLeft, memoryLabelRight, memoryLabelHeight]];
+    
+    self.operatorLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutConstraint *operatorLabelTop = [NSLayoutConstraint constraintWithItem:self.operatorLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.memoryLabel attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    NSLayoutConstraint *operatorLabelBottom = [NSLayoutConstraint constraintWithItem:self.operatorLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    NSLayoutConstraint *operatorLabelLeft = [NSLayoutConstraint constraintWithItem:self.operatorLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.resultLabel attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    NSLayoutConstraint *operatorLabelRight = [NSLayoutConstraint constraintWithItem:self.operatorLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    [self addConstraints:@[operatorLabelTop, operatorLabelLeft, operatorLabelRight, operatorLabelBottom]];
+    
+}
+```
 #### (view)Controller
 (1). 管理UI  
    * 在设置自动布局时，令`header`的`left`和`right`都设置为与`viewController.view`的对应属性对齐，因此在横竖屏切换、`viewController`的frame发生改变时`header`的frame也会随之变化，以保持整体视图的对齐。
