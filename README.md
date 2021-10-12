@@ -127,7 +127,10 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
 };
 ```
 在block中根据model的改变调用`headerView`的对应更新UI的方法。  
-
+而对于因为UI变化引起的数据变化（例如点击计算器的按钮导致`header`的显示`label`发生变化，这里通过在按钮点击响应回调block中调用`[[calculateManager sharedInstance] handleLandscapeOperationAtSection:x atRow:y model:weakSelf.model]`（这里`calculateManager`是封装的一个根据当前`model`数据和点击的按钮来进行相应输出结果计算和处理的工具类）。
 
 
 ### 2. 计算逻辑实现
+这一块主要是放在工具类`calculateManager`中实现。  
+这里将其设置为一个单例模式，开放接口`sharedManager`来供调用。
+
