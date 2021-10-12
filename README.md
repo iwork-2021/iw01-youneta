@@ -161,4 +161,5 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
 ### 2. 计算逻辑实现
 这一块主要是放在工具类`calculateManager`中实现。  
 这里将其设置为一个单例模式，开放接口`sharedManager`来供调用。
-
+| 按键类型 | Number(0~9) | SingleNumber(pi,e,mr) | BinaryOperator | UnaryOperator |  MemoryOperation | 
+| --- | --- | --- | --- | --- | --- |
