@@ -173,7 +173,8 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
 | UnaryOperator | 1. `if(operationString == @""): res = calculate(ans, nil, op);` 2. `else: res = calculate(ans, res, operationString); ans = res = calculate(res, nil, op); operationString = @"";` | 同Number | `ans = res = calculate(ans, nil, operationString); operationString = @"";` | 同Number | 同Number | 同Number |
 | Point | 1. `if(res.containsString(@"."): do nothing;` 2. `else: res.append(@".")`| `res = @"0."` | 同SingleNumber | 同SingleNumber | 同Number | 同Number |
 | Default(AC) | model.reset(); | 同左 | 同左 | 同左 | 同左 | 同左 |  
-而缓存操作(m+、m-、mc)不影响计算，只对`model`的`memoryString`字段产生影响。
+
+而缓存操作(m+、m-、mc)不影响计算，只对`model`的`memoryString`字段产生影响
 
 ### 3. 总结反思
 1. 先说说我觉得这个项目最大的不足之处，在于计算精度的问题。因为机器码保存浮点数并非是绝对精确的，这就导致了计算结果也未必绝对精确，而且默认状态是保留6位小数，这使得涉及小数的运算都存在一定的误差。而且由于计算都是用double类型来操作，而显示结果则是用`[NSString stringWithFormat:@"%f",result]`来显示转换，导致整数结果也会显示小数点。这里是我觉得整个项目做下来最大的不足。但是我大胆认为这个作业的重点并不在这块而在于MVC设计模式，因此这块我并没有花时间去优化而把主要精力放在MVC模式的设计上。  
