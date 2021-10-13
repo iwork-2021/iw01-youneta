@@ -169,9 +169,9 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
 | --- | --- | --- | --- | --- | --- | --- |
 | Numebr(0~9) | 1. if(res=0): res = op;  2. else: res.append(op) | res = op; | ans = res; res = op; | model.reset();  res=op; | res.append(op); |res = op; |
 | SingleNumber(pi,e,mr) | res = op; | res = op; | res = op; | model.reset();  res = op; | res = op; | res = op; | 
-| BinaryOperator | 1. if(operationString == @""): ans = res; res = @"0"; 2. else: ans = res = calculate(ans,res,operationString);operationString=op; | 同左 | operationString = op; | 同Number | 同Number | 同Number |
+| BinaryOperator | 1. ``` Objective-C if(operationString == @""): ans = res; res = @"0"; 2. else: ans = res = calculate(ans,res,operationString);operationString=op; ```| 同左 | operationString = op; | 同Number | 同Number | 同Number |
 | UnaryOperator | 1. if(operationString == @""): res = calculate(ans, nil, op); 2. else: res = calculate(ans, res, operationString); ans = res = calculate(res, nil, op); operationString = @""; | 同Number | ans = res = calculate(ans, nil, operationString); operationString = @""; | 同Number | 同Number | 同Number |
-| Point |
+| Point | 1. if(res.containsString(@".") |
 | Default |
 
 
