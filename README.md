@@ -161,6 +161,10 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
 ### 2. 计算逻辑实现
 这一块主要是放在工具类`calculateManager`中实现。  
 这里将其设置为一个单例模式，开放接口`sharedManager`来供调用。
+这里我在`model`中保存了一个字段`lastOperation`，这个字段实际上起到的就是一个状态机状态划分的作用。
+状态有：`number`（数字键0~9）、`SingleNumber`(pi,e,mr)、`BinaryOperator`(二元运算符)、`UnaryOperator`（一元运算符）、`Default`（初始状态、点击AC之后的状态）。
+`currentOperation`则是在点击按钮的响应回调中传入的本次点击的按钮。
+这里给出了在设计时的状态map：
 | currentOperation(op) \  lastOperation(last_op) | Number(0~9) | SingleNumber(pi,e,mr) | BinaryOperator | UnaryOperator | Default |
 | --- | --- | --- | --- | --- | --- |
 | Numebr(0~9) | 1. if(res=0): res = op;  2. else: res.append(op) | res = op; | ans = res; res = op; | model.reset();  res=op; | res = op; |
@@ -169,3 +173,9 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
 | UnaryOperator |
 | Default |
 
+
+### 3. 总结反思
+1. 先说说我觉得这个项目最大的不足之处，在于计算精度的问题。因为机器码保存浮点数并非是绝对精确的，这就导致了计算结果也未必绝对精确，而且默认状态是保留6位小数，这使得涉及小数的运算都存在一定的误差。而且由于计算都是用double类型来操作，而显示结果则是用`[NSString stringWithFormat:@"%f",result]`来显示转换，导致整数结果也会显示小数点。这里是我觉得整个项目做下来最大的不足。但是我大胆认为这个作业的重点并不在这块而在于MVC设计模式，因此这块我并没有花时间去优化而把主要精力放在MVC模式的设计上。  
+2. 第二个存在的问题我认为是在计算逻辑这块，对于整个状态机的状态的划分还是欠缺更加科学、优质的考虑，在实现的过程中逐渐发现有些状态可以合并（例如初始状态和点击了`AC`键之后的状态）、有些状态没必要区分（例如缓存操作`m+`、`m-`、`mc`，这几个操作不会影响其他操作）等等，在设计状态机之初对于这块的思考还是太过急躁粗糙。  
+
+总的来说我认为是一次收获颇多的作业。之所以没有用`swift`语言写而是用`Objective-C`来写，是因为在之前接触了解过OC，对OC的语法以及特性较为熟悉，在后面的作业中对`swift`的掌握更加深入之后会考虑转用`swift`来写。关于没有用`storyboard`来写UI而是采用了纯代码的方式来实现，这里主要是觉得代码控制更加流畅便捷，固然`storyboard`十分直观，但自己实际体验起来反而觉得有点束手束脚，也可以说是个人兴趣原因了。
