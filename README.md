@@ -163,13 +163,13 @@ view只实现UI而不涉及数据操作，将根据数据更新UI的方法作为
 这里将其设置为一个单例模式，开放接口`sharedManager`来供调用。
 这里我在`model`中保存了一个字段`lastOperation`，这个字段实际上起到的就是一个状态机状态划分的作用。
 状态有：`Number`（数字键0~9）、`SingleNumber`(pi,e,mr)、`BinaryOperator`(二元运算符)、`UnaryOperator`（一元运算符）、`Default`（初始状态、点击AC之后的状态）、`Point`（小数点）。
-`currentOperation`则是在点击按钮的响应回调中传入的本次点击的按钮。
+`currentOperation`则是在点击按钮的响应回调中传入的本次点击的按钮。`operationString`则是用于记录正在进行中的二元运算。
 这里给出了在设计时的状态map：
 | currentOperation(op) \  lastOperation(last_op) | Number(0~9) | SingleNumber(pi,e,mr) | BinaryOperator | UnaryOperator | Point | Default |
 | --- | --- | --- | --- | --- | --- | --- |
-| Numebr(0~9) | 1. if(res=0): res = op;  2. else: res.append(op) | res = op; | ans = res; res = op; | model.reset();  res=op; | res.append(op) |res = op; |
-| SingleNumber(pi,e,mr) | res = op; | res = op; | res = op;
-| BinaryOperator |
+| Numebr(0~9) | 1. if(res=0): res = op;  2. else: res.append(op) | res = op; | ans = res; res = op; | model.reset();  res=op; | res.append(op); |res = op; |
+| SingleNumber(pi,e,mr) | res = op; | res = op; | res = op; | model.reset();  res = op; | res = op; | res = op; | 
+| BinaryOperator | 1. if(operationString == @""): ans = res; res = @"0"; 2. else: ans = res = calculate(ans,res,operationString);operationString=op; | 同左 | operationString = op; | 同Number | 同Number | 同Number |
 | UnaryOperator |
 | Point |
 | Default |
