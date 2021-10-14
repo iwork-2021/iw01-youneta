@@ -86,8 +86,6 @@ static NSString *calculateError = @"无效运算";
     if([numberString containsObject:operation]) {
         // 数字键
         switch (model.lastPressButtonType) {
-            case calculatorButtonTypeMemoryOperation:
-            case calculatorButtonTypeClear:
             case calculatorButtonTypeDefault:
             case calculatorButtonTypeSingleNumber:
             case calculatorButtonTypeBinaryOperation:
@@ -115,7 +113,6 @@ static NSString *calculateError = @"无效运算";
         // 二元运算符
         switch (model.lastPressButtonType) {
             case calculatorButtonTypeBinaryOperation: break;
-            case calculatorButtonTypeMemoryOperation:
             case calculatorButtonTypePoint:
             case calculatorButtonTypeDefault:
             case calculatorButtonTypeUnaryOperation:
@@ -149,9 +146,7 @@ static NSString *calculateError = @"无效运算";
                 model.operationString = @"";
                 break;
             }
-            case calculatorButtonTypeMemoryOperation:
             case calculatorButtonTypeDefault:
-            case calculatorButtonTypeClear:
             case calculatorButtonTypeUnaryOperation:
             case calculatorButtonTypeSingleNumber:
             case calculatorButtonTypeNumber:
@@ -184,17 +179,15 @@ static NSString *calculateError = @"无效运算";
     }
     else if([operation isEqualToString:@"AC"]) {
         [model setupModel];
-        model.lastPressButtonType = calculatorButtonTypeClear;
+        model.lastPressButtonType = calculatorButtonTypeDefault;
     }
     else if([operation isEqualToString:@"."]) {
         //小数点
         switch (model.lastPressButtonType) {
-            case calculatorButtonTypeMemoryOperation:
             case calculatorButtonTypeSingleNumber:
             case calculatorButtonTypeBinaryOperation:
                 model.resultString = @"0.";
                 break;
-            case calculatorButtonTypeClear:
             default:
                 if([model.resultString containsString:@"."]);
                 else {
@@ -209,11 +202,9 @@ static NSString *calculateError = @"无效运算";
         switch (model.lastPressButtonType) {
             case calculatorButtonTypeUnaryOperation:
                 [model setupModel];
-            case calculatorButtonTypeMemoryOperation:
             case calculatorButtonTypeNumber:
             case calculatorButtonTypeBinaryOperation:
             case calculatorButtonTypePoint:
-            case calculatorButtonTypeClear:
             case calculatorButtonTypeDefault:
             case calculatorButtonTypeSingleNumber:
                 model.resultString = [self _calculateAns:model.memoryString Operand:nil Operation:operation];
@@ -225,21 +216,7 @@ static NSString *calculateError = @"无效运算";
     }
     else if([memoryOperationString containsObject:operation]) {
         //缓存操作
-        switch (model.lastPressButtonType) {
-            case calculatorButtonTypeDefault:
-            case calculatorButtonTypeNumber:
-            case calculatorButtonTypeBinaryOperation:
-            case calculatorButtonTypeUnaryOperation:
-            case calculatorButtonTypePoint:
-            case calculatorButtonTypeClear:
-            case calculatorButtonTypeMemoryOperation:
-            case calculatorButtonTypeSingleNumber:
-                [self _handleMemoryOperation:operation model:model];
-                break;
-            default:
-                break;
-        }
-        model.lastPressButtonType = calculatorButtonTypeMemoryOperation;
+        [self _handleMemoryOperation:operation model:model];
     }
 //    else if([operation isEqualToString:@"2nd"]) {
 //        //切换模式
