@@ -9,6 +9,8 @@ iw01-youneta created by GitHub Classroom
 4. 用Markdown编写项目文档，并展示运行截屏
 
 ***
+## 运行录屏
+https://www.bilibili.com/video/BV14P4y1t7bu
 
 ## 实现UI展示
 * 竖屏  
