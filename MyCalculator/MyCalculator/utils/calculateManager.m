@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) NSArray *portraitOperationArray;
 @property (nonatomic, strong) NSArray *landscapeOperationArray;
+@property (nonatomic, strong) NSArray *landscapeSecondModeOpeartionArray;
 
 @end
 
@@ -24,12 +25,13 @@
 #pragma mark *** static ***
 static calculateManager *sharedManager = nil;
 static NSArray *numberString = @[@"0", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9"];
-static NSArray *unaryOperatorString = @[@"+/-", @"%", @"=", @"x^2", @"x^3", @"log10", @"e^x", @"1/x", @"2√x", @"3√x", @"x!", @"ln", @"sin", @"cos", @"tan", @"sinh", @"cosh", @"tanh", @"10^x"];
-static NSArray *binaryOperatorString = @[@"+", @"-", @"÷", @"×", @"x^y", @"y√x", @"EE"];
+static NSArray *unaryOperatorString = @[@"+/-", @"%", @"=", @"x^2", @"x^3", @"log10", @"e^x", @"1/x", @"2√x", @"3√x", @"x!", @"ln", @"sin", @"cos", @"tan", @"sinh", @"cosh", @"tanh", @"10^x", @"2^x", @"sin^(-1)", @"cos^(-1)", @"tan^(-1)", @"log2", @"sinh^(-1)", @"cosh^(-1)", @"tanh^(-1)"];
+static NSArray *binaryOperatorString = @[@"+", @"-", @"÷", @"×", @"x^y", @"y√x", @"EE", @"y^x", @"logy"];
 static NSArray *memoryOperationString = @[@"m+", @"m-", @"mc"];
 static NSArray *singleNumberString = @[@"mr", @"e", @"π", @"Rand"];
 static NSString *divideZeroErrorString = @"除0错误！";
 static NSString *calculateNotSupportedString = @"暂不支持的操作";
+static NSString *calculatorSwitchModeString = @"switch mode";
 static NSString *calculateError = @"无效运算";
 
 #pragma mark *** init ***
@@ -54,8 +56,9 @@ static NSString *calculateError = @"无效运算";
     return [[self.portraitOperationArray objectAtIndex:x] objectAtIndex:y];
 }
 
-- (NSString *)getLandscapeColletionCellStringAtSection:(NSInteger)x atRow:(NSInteger)y {
-    return [[self.landscapeOperationArray objectAtIndex:x] objectAtIndex:y];
+- (NSString *)getLandscapeColletionCellStringAtSection:(NSInteger)x atRow:(NSInteger)y mode:(BOOL)mode{
+    if(mode == NO) return [[self.landscapeOperationArray objectAtIndex:x] objectAtIndex:y];
+    else return [[self.landscapeSecondModeOpeartionArray objectAtIndex:x] objectAtIndex:y];
 }
 
 - (NSString *)handlePortraitOperationAtSection:(NSInteger)x atRow:(NSInteger)y model:(calculateModel *)model{
@@ -64,7 +67,7 @@ static NSString *calculateError = @"无效运算";
 }
 
 - (NSString *)handleLandscapeOperationAtSection:(NSInteger)x atRow:(NSInteger)y model:(calculateModel *)model{
-    NSString *operation = [self getLandscapeColletionCellStringAtSection:x atRow:y];
+    NSString *operation = [self getLandscapeColletionCellStringAtSection:x atRow:y mode:model.modeFlag];
     return [self _handleOperation:operation model:model];
 }
 
@@ -78,6 +81,10 @@ static NSString *calculateError = @"无效运算";
                                     @[@"(", @")", @"mc", @"m+", @"m-", @"mr", @"AC", @"+/-", @"%", @"÷", @"2nd", @"x^2", @"x^3", @"x^y", @"e^x", @"10^x", @"7", @"8", @"9", @"×", @"1/x", @"2√x", @"3√x", @"y√x", @"ln", @"log10", @"4", @"5", @"6", @"-", @"x!", @"sin", @"cos", @"tan", @"e", @"EE", @"1", @"2", @"3", @"+"],
                                     @[@"Rad", @"sinh", @"cosh", @"tanh", @"π", @"Rand", @"0", @".", @"="],
                                    nil];
+    self.landscapeSecondModeOpeartionArray = [NSArray arrayWithObjects:
+                                              @[@"(", @")", @"mc", @"m+", @"m-", @"mr", @"AC", @"+/-", @"%", @"÷", @"2nd", @"x^2", @"x^3", @"x^y", @"y^x", @"2^x", @"7", @"8", @"9", @"×", @"1/x", @"2√x", @"3√x", @"y√x", @"logy", @"log2", @"4", @"5", @"6", @"-", @"x!", @"sin^(-1)", @"cos^(-1)", @"tan^(-1)", @"e", @"EE", @"1", @"2", @"3", @"+"],
+                                              @[@"Rad", @"sinh^(-1)", @"cosh^(-1)", @"tanh^(-1)", @"π", @"Rand", @"0", @".", @"="],
+                                             nil];
 }
 
 
@@ -218,9 +225,11 @@ static NSString *calculateError = @"无效运算";
         //缓存操作
         [self _handleMemoryOperation:operation model:model];
     }
-//    else if([operation isEqualToString:@"2nd"]) {
-//        //切换模式
-//    }
+    else if([operation isEqualToString:@"2nd"]) {
+        //切换模式
+        model.modeFlag = !model.modeFlag;
+        return calculatorSwitchModeString;
+    }
     else {
         [model setupModel];
         return [calculateNotSupportedString stringByAppendingFormat:@": %@",operation];;
@@ -347,6 +356,36 @@ static NSString *calculateError = @"无效运算";
     }
     else if([operation isEqualToString:@"EE"]) {
         result = ansDouble * pow(10.0, operandDouble);
+    }
+    else if([operation isEqualToString:@"2^x"]) {
+        result = pow(2, ansDouble);
+    }
+    else if([operation isEqualToString:@"y^x"]) {
+        result = pow(operandDouble, ansDouble);
+    }
+    else if([operation isEqualToString:@"log2"]) {
+        result = log2(ansDouble);
+    }
+    else if([operation isEqualToString:@"logy"]) {
+        result = log(ansDouble) / log(operandDouble);
+    }
+    else if([operation isEqualToString:@"sin^(-1)"]) {
+        result = RADIANS_TO_DEGREE(asin(ansDouble));
+    }
+    else if([operation isEqualToString:@"cos^(-1)"]) {
+        result = RADIANS_TO_DEGREE(acos(ansDouble));
+    }
+    else if([operation isEqualToString:@"tan^(-1)"]) {
+        result = RADIANS_TO_DEGREE(atan(ansDouble));
+    }
+    else if([operation isEqualToString:@"sinh^(-1)"]) {
+        result = asinh(ansDouble);
+    }
+    else if([operation isEqualToString:@"cosh^(-1)"]) {
+        result = acosh(ansDouble);
+    }
+    else if([operation isEqualToString:@"tanh^(-1)"]) {
+        result = atanh(ansDouble);
     }
     else {
         return [calculateNotSupportedString stringByAppendingFormat:@": %@", operation];

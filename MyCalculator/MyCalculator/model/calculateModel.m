@@ -23,6 +23,7 @@
         [self setupModel];
         self.memoryFlag = NO;
         self.memoryString = @"0";
+        self.modeFlag = NO;
     }
     return self;
 }

@@ -12,6 +12,7 @@
 
 @interface landscapeView()<UICollectionViewDelegate, UICollectionViewDataSource>
 @property(strong, nonatomic) UICollectionView  *buttonCollectionView;
+@property(nonatomic) BOOL mode;
 @end
 
 //cell的标识
@@ -30,6 +31,7 @@ static NSString *cellIdentifier = @"buttonCollectionViewCell";
 - (instancetype)init {
     if(self = [super init]){
         self.buttonDidClickBlock = nil;
+        self.mode = NO;
     }
     return self;
 }
@@ -120,7 +122,7 @@ static NSString *cellIdentifier = @"buttonCollectionViewCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     if([cell isKindOfClass:[buttonCollectionViewCell class]]){
-        NSString *cellText = [[calculateManager sharedInstance]getLandscapeColletionCellStringAtSection:indexPath.section atRow:indexPath.row];
+        NSString *cellText = [[calculateManager sharedInstance]getLandscapeColletionCellStringAtSection:indexPath.section atRow:indexPath.row mode:self.mode];
         [((buttonCollectionViewCell *)cell) setTextLabelText:cellText];
     }
     cell.backgroundColor = [self _colorForEachCell:indexPath];
@@ -146,6 +148,23 @@ static NSString *cellIdentifier = @"buttonCollectionViewCell";
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
+}
+
+#pragma mark *** publick methods ***
+- (void)updateButtonsWhenSwitchingMode:(BOOL)mode {
+    self.mode = mode;
+    for (int i = 0; i < self.buttonCollectionView.numberOfSections; i++) {
+        for(int j = 0; j<[self.buttonCollectionView numberOfItemsInSection:i]; j++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
+            buttonCollectionViewCell *cell = ((buttonCollectionViewCell *)[self.buttonCollectionView cellForItemAtIndexPath:indexPath]);
+            if([cell respondsToSelector:@selector(setTextLabelText:)]){
+                [cell setTextLabelText:[[calculateManager sharedInstance] getLandscapeColletionCellStringAtSection:i atRow:j mode:mode]];
+            }
+            [self.buttonCollectionView reloadItemsAtIndexPaths:@[indexPath]];
+            
+        }
+    }
+//    [self.buttonCollectionView reloadData];
 }
 
 #pragma mark *** private methods ***

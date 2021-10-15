@@ -11,5 +11,6 @@
 @interface landscapeView : UIView
 
 @property (nonatomic, strong) void(^buttonDidClickBlock)(NSInteger x, NSInteger y);
+- (void)updateButtonsWhenSwitchingMode:(BOOL)mode;
 
 @end

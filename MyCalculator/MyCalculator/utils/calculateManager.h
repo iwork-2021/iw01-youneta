@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedInstance; //作为一个单例来使用
 
 - (NSString *)getPortraitColletionCellStringAtSection:(NSInteger)x atRow:(NSInteger)y; //返回竖屏状态的按键展示字符串
-- (NSString *)getLandscapeColletionCellStringAtSection:(NSInteger)x atRow:(NSInteger)y;
+- (NSString *)getLandscapeColletionCellStringAtSection:(NSInteger)x atRow:(NSInteger)y mode:(BOOL)mode;
 - (NSString *)handlePortraitOperationAtSection:(NSInteger)x atRow:(NSInteger)y model:(calculateModel *)model;
 - (NSString *)handleLandscapeOperationAtSection:(NSInteger)x atRow:(NSInteger)y model:(calculateModel *)model;
 

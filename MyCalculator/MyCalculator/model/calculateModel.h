@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, calculatorStatus) {
 @property (nonatomic, strong) NSString *operationString;
 @property (nonatomic, strong) NSString *memoryString;
 @property (nonatomic) BOOL memoryFlag;
+@property (nonatomic) BOOL modeFlag;
 @property (nonatomic) calculatorButtonType lastPressButtonType;
 
 - (void)setupModel;

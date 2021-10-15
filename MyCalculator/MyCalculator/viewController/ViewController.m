@@ -133,6 +133,8 @@
 //    newConstraints =  self.view.constraints;
 }
 
+#pragma mark *** private methods ***
+
 #pragma mark *** toast ***
 - (void)_showAlert:(NSString *)text {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:text message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -168,7 +170,12 @@
         _landscapeView.buttonDidClickBlock = ^(NSInteger x, NSInteger y) {
             NSString *result = [[calculateManager sharedInstance] handleLandscapeOperationAtSection:x atRow:y model:weakSelf.model];
             if(![result isEqualToString:@""]) {
-                [weakSelf _showAlert:result];
+                if([result isEqualToString:@"switch mode"]) {
+                    [weakSelf.landscapeView updateButtonsWhenSwitchingMode:weakSelf.model.modeFlag];
+                }
+                else {
+                    [weakSelf _showAlert:result];
+                }
             }
             [weakSelf.headerView updateResultLabelText:weakSelf.model.resultString];
             [weakSelf.headerView updateOperationLabelText:weakSelf.model.operationString];

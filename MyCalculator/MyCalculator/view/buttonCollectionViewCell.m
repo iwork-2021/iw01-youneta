@@ -35,6 +35,7 @@
 #pragma mark *** public methods ***
 - (void)setTextLabelText:(NSString *)text {
     self.textLabel.text = text;
+    [self.textLabel setAdjustsFontSizeToFitWidth:YES];
 }
 
 #pragma mark *** getter ***
